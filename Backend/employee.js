@@ -9,7 +9,8 @@ const Employee = sequelize.define('Employee', {
     },
     first_name: DataTypes.STRING,
     last_name: DataTypes.STRING,
-    email: DataTypes.STRING
+    email: DataTypes.STRING,
+    department: DataTypes.INTEGER
 }, {
     tableName: 'employee',
     timestamps: false

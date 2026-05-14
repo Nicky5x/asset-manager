@@ -5,9 +5,10 @@ import './App.css';
 function App() {
   // 1. Create a "State" to hold our assets (starts as an empty array)
   const [assets, setAssets] = useState([]);
-
+  const [employees, setEmployee] = useState([]);
   // 2. The "useEffect" hook runs as soon as the page loads
   useEffect(() => {
+    fetchEmployees();
     fetchAssets();
   }, []);
 
@@ -20,6 +21,15 @@ function App() {
       console.error("Error fetching data:", error);
     }
   };
+
+  const fetchEmployees = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/employee');
+      setEmployee(response.data); // Put the employees into bucket  
+    } catch (error) {
+      console.error("Error fetching employees:", error);
+    }
+  }
 
   return (
     <div className="App">
@@ -48,8 +58,32 @@ function App() {
               </td>
             </tr>
           ))}
-        </tbody>
+          </tbody>
       </table>
+      <h2>Employees</h2>
+      <table border="1" style={{ width: '80%', margin: 'auto' }}>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Department</th>
+            <th>Assigned Assets</th>
+          </tr>
+        </thead>
+        <tbody>
+          {employees.map((employee) => (
+            <tr key={employee.employee_id}>
+              <td>{employee.first_name} {employee.last_name}</td>
+              <td>{employee.email}</td>
+              <td>{employee.Department?.department_name}</td>
+              <td>
+       {/* Show Asset if it exists via the Assignment join */}
+       {employee.Assignments?.[0]?.Asset?.model || 'Unassigned'}
+    </td>
+            </tr>
+          ))}
+        </tbody>
+        </table>
     </div>
   );
 }
